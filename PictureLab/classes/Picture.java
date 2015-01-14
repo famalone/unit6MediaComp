@@ -106,7 +106,54 @@ public class Picture extends SimplePicture
         {
             for (Pixel pixelObj : rowArray)
             {
-                pixelObj.setBlue(0);
+                pixelObj.setRed(0);
+                pixelObj.setGreen(0);
+            }
+        }
+    }
+    
+    /** negates all the pixels in a picture */
+    public void negate()
+    {
+        Pixel[][] pixels = this.getPixels2D();
+        for (Pixel[] rowArray : pixels)
+        {
+            for (Pixel pixelObj : rowArray)
+            {
+                int blue = pixelObj.getBlue();
+                blue = 255 - blue;
+                int red = pixelObj.getRed();
+                red = 255 - red;
+                int green = pixelObj.getGreen();
+                green = 255 - green;
+                
+                pixelObj.setBlue(blue);
+                pixelObj.setRed(red);
+                pixelObj.setGreen(green);
+            }
+        }
+    }
+    
+    /** sets all pixels to a grayscale value */
+    public void grayscale()
+    {
+        Pixel[][] pixels = this.getPixels2D();
+        for (Pixel[] rowArray : pixels)
+        {
+            for (Pixel pixelObj : rowArray)
+            {
+                int blue = pixelObj.getBlue();
+                int red = pixelObj.getRed();
+                int green = pixelObj.getGreen();
+                int average = (blue + red + green)/3;
+                
+                blue = average;
+                red = average;
+                green = average;
+                
+                pixelObj.setBlue(blue);
+                pixelObj.setRed(red);
+                pixelObj.setGreen(green);
             }
         }
     }
