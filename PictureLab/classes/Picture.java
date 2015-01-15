@@ -25,7 +25,7 @@ public class Picture extends SimplePicture
         /* not needed but use it to show students the implicit call to super()
          * child constructors always call a parent constructor 
          */
-        super();  
+        super();
     }
 
     /**
@@ -84,7 +84,24 @@ public class Picture extends SimplePicture
         return output;
 
     }
-
+    
+    /** Method to crop a picture and copy it*/
+    void cropAndCopy( Picture sourcePicture, int startSourceRow, int endSourceRow,
+        int startSourceCol, int endSourceCol,int startDestRow, int startDestCol )
+    {
+        Pixel[][] originalPic = sourcePicture.getPixels2D();
+        Pixel[][] cropPic = null;
+        Pixel[][] otherPic = this.getPixels2D();
+        
+        for(int row = startSourceRow; row < endSourceRow; row++)
+        {
+            for(int col = startSourceCol; col < endSourceCol; col++)
+            {
+                cropPic = originalPic[row][col];
+            }
+        }
+    }
+    
     /** Method to set the blue to 0 */
     public void zeroBlue()
     {
