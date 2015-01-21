@@ -93,20 +93,22 @@ public class Picture extends SimplePicture
         Pixel[][] cropPic = new Pixel[(endSourceRow - startSourceRow) + 1]
             [(endSourceCol - startSourceCol) + 1];
         Pixel[][] otherPic = this.getPixels2D();
+        Pixel originalPix = null;
         Pixel cropPix = null;
         Pixel otherPix = null;
         int cropCol = 0;
         int cropRow = 0;
         
-        for(int row = startSourceRow; row < endSourceRow; row++)
+        for(int row = startSourceRow; row <= endSourceRow; row++)
         {
-            for(int col = startSourceCol; col < endSourceCol; col++)
+            for(int col = startSourceCol; col <= endSourceCol; col++)
             {
-                cropPix = originalPic[row][col];
-                cropPic[cropRow][cropCol] = cropPix;
+                originalPix = originalPic[row][col];
+                cropPic[cropRow][cropCol] = originalPix;
                 cropCol++;
             }
             cropRow++;
+            cropCol = 0;
         }
         
         cropCol = 0;
@@ -116,11 +118,13 @@ public class Picture extends SimplePicture
         {
             for( int col = startDestCol; col < (cropPic[0].length + startDestCol);col++)
             {
-                otherPix = cropPic[cropRow][cropCol];
-                otherPic[row][col] = otherPix;
+                cropPix = cropPic[cropRow][cropCol];
+                otherPix = otherPic[row][col];
+                otherPix.setColor(cropPix.getColor());
                 cropCol++;
             }
             cropRow++;
+            cropCol = 0;
         }
     }
     
@@ -359,19 +363,13 @@ public class Picture extends SimplePicture
     }
 
     /** Method to create a collage of several pictures */
-    public void createCollage()
+    public void collage()
     {
-        Picture flower1 = new Picture("flower1.jpg");
-        Picture flower2 = new Picture("flower2.jpg");
-        this.copy(flower1,0,0);
-        this.copy(flower2,100,0);
-        this.copy(flower1,200,0);
-        Picture flowerNoBlue = new Picture(flower2);
-        flowerNoBlue.zeroBlue();
-        this.copy(flowerNoBlue,300,0);
-        this.copy(flower1,400,0);
-        this.copy(flower2,500,0);
-        this.mirrorVertical();
+        Picture blueGuitar1 = new Picture("blueGuitar.jpg");
+        Picture blueGuitar2 = new Picture("blueGuitar.jpg");
+        Picture blueGuitar3 = new Picture("blueGuitar.jpg");
+        Picture blueGuitar4 = new Picture("blueGuitar.jpg");
+
         this.write("collage.jpg");
     }
 
