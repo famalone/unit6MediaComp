@@ -8,6 +8,16 @@
  */
 public class PictureTester
 {
+  public static void testCropAndCopy()
+  {
+    Picture beach = new Picture("beach.jpg");
+    Picture caterpillar = new Picture("caterpillar.jpg");
+    caterpillar.explore();
+    beach.explore();
+    beach.cropAndCopy(caterpillar, 10, 100, 20, 200, 30, 40);
+    beach.explore();
+  }
+    
   /** Method to test zeroBlue */
   public static void testZeroBlue()
   {

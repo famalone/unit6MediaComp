@@ -90,15 +90,37 @@ public class Picture extends SimplePicture
         int startSourceCol, int endSourceCol,int startDestRow, int startDestCol )
     {
         Pixel[][] originalPic = sourcePicture.getPixels2D();
-        Pixel[][] cropPic = null;
+        Pixel[][] cropPic = new Pixel[(endSourceRow - startSourceRow) + 1]
+            [(endSourceCol - startSourceCol) + 1];
         Pixel[][] otherPic = this.getPixels2D();
+        Pixel cropPix = null;
+        Pixel otherPix = null;
+        int cropCol = 0;
+        int cropRow = 0;
         
         for(int row = startSourceRow; row < endSourceRow; row++)
         {
             for(int col = startSourceCol; col < endSourceCol; col++)
             {
-                cropPic = originalPic[row][col];
+                cropPix = originalPic[row][col];
+                cropPic[cropRow][cropCol] = cropPix;
+                cropCol++;
             }
+            cropRow++;
+        }
+        
+        cropCol = 0;
+        cropRow = 0;
+        
+        for(int row = startDestRow; row < (cropPic.length + startDestRow);row++)
+        {
+            for( int col = startDestCol; col < (cropPic[0].length + startDestCol);col++)
+            {
+                otherPix = cropPic[cropRow][cropCol];
+                otherPic[row][col] = otherPix;
+                cropCol++;
+            }
+            cropRow++;
         }
     }
     
