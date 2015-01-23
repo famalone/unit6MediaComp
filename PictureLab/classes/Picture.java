@@ -84,10 +84,10 @@ public class Picture extends SimplePicture
         return output;
 
     }
-    
+
     /** Method to crop a picture and copy it*/
     void cropAndCopy( Picture sourcePicture, int startSourceRow, int endSourceRow,
-        int startSourceCol, int endSourceCol,int startDestRow, int startDestCol )
+    int startSourceCol, int endSourceCol,int startDestRow, int startDestCol )
     {
         Pixel[][] originalPic = sourcePicture.getPixels2D();
         Pixel[][] cropPic = new Pixel[(endSourceRow - startSourceRow) + 1]
@@ -98,7 +98,7 @@ public class Picture extends SimplePicture
         Pixel otherPix = null;
         int cropCol = 0;
         int cropRow = 0;
-        
+
         for(int row = startSourceRow; row <= endSourceRow; row++)
         {
             for(int col = startSourceCol; col <= endSourceCol; col++)
@@ -110,10 +110,10 @@ public class Picture extends SimplePicture
             cropRow++;
             cropCol = 0;
         }
-        
+
         cropCol = 0;
         cropRow = 0;
-        
+
         for(int row = startDestRow; row < (cropPic.length + startDestRow);row++)
         {
             for( int col = startDestCol; col < (cropPic[0].length + startDestCol);col++)
@@ -127,7 +127,7 @@ public class Picture extends SimplePicture
             cropCol = 0;
         }
     }
-    
+
     /** Method to set the blue to 0 */
     public void zeroBlue()
     {
@@ -136,11 +136,15 @@ public class Picture extends SimplePicture
         {
             for (Pixel pixelObj : rowArray)
             {
-                pixelObj.setBlue(0);
+                if(!((pixelObj.getBlue() == 255) && (pixelObj.getRed() == 255) &&
+                    (pixelObj.getGreen() == 255)))
+                {
+                    pixelObj.setBlue(0);
+                }
             }
         }
     }
-    
+
     /** Method to set green and red to 0 */
     public void keepOnlyBlue()
     {
@@ -154,7 +158,7 @@ public class Picture extends SimplePicture
             }
         }
     }
-    
+
     /** negates all the pixels in a picture */
     public void negate()
     {
@@ -163,20 +167,24 @@ public class Picture extends SimplePicture
         {
             for (Pixel pixelObj : rowArray)
             {
-                int blue = pixelObj.getBlue();
-                blue = 255 - blue;
-                int red = pixelObj.getRed();
-                red = 255 - red;
-                int green = pixelObj.getGreen();
-                green = 255 - green;
-                
-                pixelObj.setBlue(blue);
-                pixelObj.setRed(red);
-                pixelObj.setGreen(green);
+                if(!((pixelObj.getBlue() >= 250) && (pixelObj.getRed() >= 250) &&
+                    (pixelObj.getGreen() >= 250)))
+                {
+                    int blue = pixelObj.getBlue();
+                    blue = 255 - blue;
+                    int red = pixelObj.getRed();
+                    red = 255 - red;
+                    int green = pixelObj.getGreen();
+                    green = 255 - green;
+
+                    pixelObj.setBlue(blue);
+                    pixelObj.setRed(red);
+                    pixelObj.setGreen(green);
+                }
             }
         }
     }
-    
+
     /** sets all pixels to a grayscale value */
     public void grayscale()
     {
@@ -189,11 +197,11 @@ public class Picture extends SimplePicture
                 int red = pixelObj.getRed();
                 int green = pixelObj.getGreen();
                 int average = (blue + red + green)/3;
-                
+
                 blue = average;
                 red = average;
                 green = average;
-                
+
                 pixelObj.setBlue(blue);
                 pixelObj.setRed(red);
                 pixelObj.setGreen(green);
@@ -237,7 +245,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-    
+
     public void mirrorHorizontal()
     {
         Pixel[][] pixels = this.getPixels2D();
@@ -254,7 +262,7 @@ public class Picture extends SimplePicture
             }
         } 
     }
-    
+
     public void mirrorHorizontalBotToTop()
     {
         Pixel[][] pixels = this.getPixels2D();
@@ -280,7 +288,7 @@ public class Picture extends SimplePicture
         Pixel rightPixel = null;
         int count = 0;
         Pixel[][] pixels = this.getPixels2D();
-        
+
         // loop through the rows
         for (int row = 27; row < 97; row++)
         {
@@ -296,7 +304,7 @@ public class Picture extends SimplePicture
         }
         System.out.println(count);
     }
-    
+
     public void mirrorArms()
     {
         int mirrorPoint = 206;
@@ -304,7 +312,7 @@ public class Picture extends SimplePicture
         Pixel rightPixel = null;
         int count = 0;
         Pixel[][] pixels = this.getPixels2D();
-        
+
         for (int row = 159; row < 179; row++)
         {
             for (int col = 100; col < mirrorPoint; col++)
@@ -316,7 +324,7 @@ public class Picture extends SimplePicture
                 rightPixel.setColor(leftPixel.getColor());
             }
         }
-        
+
         for (int row = 159; row < 196; row++)
         {
             for (int col = 310; col > mirrorPoint; col--)
@@ -365,10 +373,34 @@ public class Picture extends SimplePicture
     /** Method to create a collage of several pictures */
     public void collage()
     {
+        //384x384
         Picture blueGuitar1 = new Picture("blueGuitar.jpg");
+        this.copy(blueGuitar1, 0, 0);
+
         Picture blueGuitar2 = new Picture("blueGuitar.jpg");
+        blueGuitar2.zeroBlue();
+        this.copy(blueGuitar2, 0, 768);
+
         Picture blueGuitar3 = new Picture("blueGuitar.jpg");
+        blueGuitar3.negate();
+        this.copy(blueGuitar3, 0, 384);
+
         Picture blueGuitar4 = new Picture("blueGuitar.jpg");
+        blueGuitar4.mirrorVerticalRightToLeft();
+        this.copy(blueGuitar4, 384, 0);
+
+        Picture blueGuitar5 = new Picture("blueGuitar.jpg");
+        blueGuitar5.mirrorHorizontalBotToTop();
+        blueGuitar5.negate();
+        this.copy(blueGuitar5, 384, 384);
+
+        Picture blueGuitar6 = new Picture("blueGuitar.jpg");
+        blueGuitar6.cropAndCopy(blueGuitar3, 0, 75, 0, 383, 0, 0);
+        blueGuitar6.cropAndCopy(blueGuitar1, 75, 150, 0, 383, 75, 0);
+        blueGuitar6.cropAndCopy(blueGuitar5, 150, 225, 0, 383, 150, 0);
+        blueGuitar6.cropAndCopy(blueGuitar4, 225, 300, 0, 383, 225, 0);
+        blueGuitar6.cropAndCopy(blueGuitar2, 300, 383, 0, 383, 300, 0);
+        this.copy(blueGuitar6, 384, 768);
 
         this.write("collage.jpg");
     }
